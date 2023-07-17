@@ -1,92 +1,81 @@
-public class MyHashMap {
-    private Node[] buckets;
+import java.util.LinkedList;
+
+public class MyHashMap<K, V> {
     private static final int INITIAL_CAPACITY = 16;
+    private LinkedList<Node<K, V>>[] buckets;
     private int size;
 
-    public MyHashMap() {
-        this.buckets = new Node[INITIAL_CAPACITY];
-    }
+    private static class Node<K, V> {
+        K key;
+        V value;
 
-    class Node {
-        Object key;
-        Object value;
-        Node next;
-
-        Node(Object key, Object value) {
+        public Node(K key, V value) {
             this.key = key;
             this.value = value;
         }
     }
 
-    public void put(Object key, Object value) {
-        Node node = new Node(key, value);
-        int bucket = getBucketIndex(key);
-        Node existing = buckets[bucket];
-        if (existing == null) {
-            buckets[bucket] = node;
-            size++;
-        } else {
-            // обрабатываем коллизию с помощью связного списка
-            while (existing.next != null) {
-                if (existing.key.equals(key)) {
-                    existing.value = value;
-                    return;
-                }
-                existing = existing.next;
+    public MyHashMap() {
+        buckets = new LinkedList[INITIAL_CAPACITY];
+        for (int i = 0; i < INITIAL_CAPACITY; i++) {
+            buckets[i] = new LinkedList<>();
+        }
+        size = 0;
+    }
+
+    private int getIndex(K key) {
+        return Math.abs(key.hashCode()) % buckets.length;
+    }
+
+    public void put(K key, V value) {
+        int index = getIndex(key);
+        LinkedList<Node<K, V>> bucket = buckets[index];
+
+        for (Node<K, V> node : bucket) {
+            if (node.key.equals(key)) {
+                node.value = value;
+                return;
             }
-            if (existing.key.equals(key)) {
-                existing.value = value;
-            } else {
-                existing.next = node;
-                size++;
+        }
+
+        bucket.addLast(new Node<>(key, value));
+        size++;
+    }
+
+    public void remove(K key) {
+        int index = getIndex(key);
+        LinkedList<Node<K, V>> bucket = buckets[index];
+
+        for (Node<K, V> node : bucket) {
+            if (node.key.equals(key)) {
+                bucket.remove(node);
+                size--;
+                return;
             }
         }
     }
 
-    public Object get(Object key) {
-        Node bucket = buckets[getBucketIndex(key)];
-        while (bucket != null) {
-            if (bucket.key.equals(key)) {
-                return bucket.value;
-            }
-            bucket = bucket.next;
+    public void clear() {
+        for (int i = 0; i < buckets.length; i++) {
+            buckets[i].clear();
         }
-        return null;
-    }
-
-    public void remove(Object key) {
-        int bucketIndex = getBucketIndex(key);
-        Node node = buckets[bucketIndex];
-
-        if (node == null) {
-            return;
-        }
-
-        if (node.key.equals(key)) {
-            buckets[bucketIndex] = node.next;
-            size--;
-        } else {
-            while (node.next != null) {
-                if (node.next.key.equals(key)) {
-                    node.next = node.next.next;
-                    size--;
-                    return;
-                }
-                node = node.next;
-            }
-        }
+        size = 0;
     }
 
     public int size() {
         return size;
     }
 
-    public void clear() {
-        buckets = new Node[INITIAL_CAPACITY];
-        size = 0;
-    }
+    public V get(K key) {
+        int index = getIndex(key);
+        LinkedList<Node<K, V>> bucket = buckets[index];
 
-    private int getBucketIndex(Object key) {
-        return key.hashCode() % buckets.length;
+        for (Node<K, V> node : bucket) {
+            if (node.key.equals(key)) {
+                return node.value;
+            }
+        }
+
+        return null;
     }
 }

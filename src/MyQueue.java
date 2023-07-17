@@ -1,58 +1,29 @@
-public class MyQueue {
-    private Node head;
-    private Node tail;
-    private int size;
+import java.util.LinkedList;
 
-    private static class Node {
-        Object value;
-        Node next;
+public class MyQueue<E> {
+    private LinkedList<E> queue;
 
-        Node(Object value, Node next) {
-            this.value = value;
-            this.next = next;
-        }
+    public MyQueue() {
+        queue = new LinkedList<>();
     }
 
-    public void add(Object value) {
-        Node newNode = new Node(value, null);
-        if (tail == null) {
-            head = newNode;
-            tail = newNode;
-        } else {
-            tail.next = newNode;
-            tail = newNode;
-        }
-        size++;
+    public void add(E value) {
+        queue.addLast(value);
     }
 
     public void clear() {
-        head = null;
-        tail = null;
-        size = 0;
+        queue.clear();
     }
 
     public int size() {
-        return size;
+        return queue.size();
     }
 
-    public Object peek() {
-        if (size == 0) {
-            return null;
-        }
-        return head.value;
+    public E peek() {
+        return queue.peekFirst();
     }
 
-    public Object poll() {
-        if (size == 0) {
-            return null;
-        }
-        Object value = head.value;
-        head = head.next;
-        size--;
-        if (size == 0) {
-            tail = null;
-        }
-        return value;
+    public E poll() {
+        return queue.pollFirst();
     }
 }
-

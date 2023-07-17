@@ -1,38 +1,37 @@
-public class MyArrayList {
-    private Object[] elements;
+import java.util.Arrays;
+
+public class MyArrayList<E> {
+    private static final int DEFAULT_CAPACITY = 10;
+    private Object[] data;
     private int size;
 
     public MyArrayList() {
-        this.elements = new Object[10]; // начальный размер массива
+        this.data = new Object[DEFAULT_CAPACITY];
         this.size = 0;
     }
 
-    public void add(Object value) {
-        if (size == elements.length) {
-            // расширяем массив в два раза, если он полон
-            Object[] newElements = new Object[elements.length * 2];
-            System.arraycopy(elements, 0, newElements, 0, size);
-            elements = newElements;
+    public void add(E value) {
+        if (size == data.length) {
+            resize();
         }
-        elements[size] = value;
-        size++;
+        data[size++] = value;
+    }
+
+    private void resize() {
+        int newCapacity = data.length * 2;
+        data = Arrays.copyOf(data, newCapacity);
     }
 
     public void remove(int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
         }
-        Object[] newElements = new Object[elements.length - 1];
-        System.arraycopy(elements, 0, newElements, 0, index);
-        System.arraycopy(elements, index + 1, newElements, index, elements.length - index - 1);
-        elements = newElements;
-        size--;
+        System.arraycopy(data, index + 1, data, index, size - index - 1);
+        data[--size] = null;
     }
 
     public void clear() {
-        for (int i = 0; i < size; i++) {
-            elements[i] = null;
-        }
+        data = new Object[DEFAULT_CAPACITY];
         size = 0;
     }
 
@@ -40,10 +39,10 @@ public class MyArrayList {
         return size;
     }
 
-    public Object get(int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+    public E get(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
         }
-        return elements[index];
+        return (E) data[index];
     }
 }

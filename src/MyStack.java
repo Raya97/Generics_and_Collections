@@ -1,54 +1,37 @@
-public class MyStack {
-    private Object[] elements;
-    private int size;
+import java.util.LinkedList;
 
-    public MyStack(int capacity) {
-        elements = new Object[capacity];
+public class MyStack<E> {
+    private LinkedList<E> stack;
+
+    public MyStack() {
+        stack = new LinkedList<>();
     }
 
-    public void push(Object value) {
-        if (size == elements.length) {
-            throw new IllegalStateException("Cannot add to full stack");
-        }
-        elements[size] = value;
-        size++;
-    }
-
-    public void clear() {
-        for (int i = 0; i < size; i++) {
-            elements[i] = null;
-        }
-        size = 0;
-    }
-
-    public int size() {
-        return size;
-    }
-
-    public Object peek() {
-        if (size == 0) {
-            throw new IllegalStateException("Cannot peek from empty stack");
-        }
-        return elements[size - 1];
-    }
-
-    public Object pop() {
-        if (size == 0) {
-            throw new IllegalStateException("Cannot pop from empty stack");
-        }
-        Object value = elements[size - 1];
-        elements[size - 1] = null;
-        size--;
-        return value;
+    public void push(E value) {
+        stack.addFirst(value);
     }
 
     public void remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index out of bounds");
+        if (index < 0 || index >= stack.size()) {
+            throw new IndexOutOfBoundsException();
         }
-        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
-        elements[size - 1] = null;
-        size--;
+        stack.remove(index);
+    }
+
+    public void clear() {
+        stack.clear();
+    }
+
+    public int size() {
+        return stack.size();
+    }
+
+    public E peek() {
+        return stack.peekFirst();
+    }
+
+    public E pop() {
+        return stack.pollFirst();
     }
 }
 

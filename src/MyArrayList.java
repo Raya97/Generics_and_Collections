@@ -1,37 +1,98 @@
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
-public class MyArrayList<E> {
-    private static final int DEFAULT_CAPACITY = 10;
-    private Object[] data;
+class MyEntry<K, V> {
+    private final K key;
+    private V value;
+
+    public MyEntry(K key, V value) {
+        this.key = key;
+        this.value = value;
+    }
+
+    public K getKey() {
+        return key;
+    }
+
+    public V getValue() {
+        return value;
+    }
+
+    public void setValue(V value) {
+        this.value = value;
+    }
+}
+
+public class MyHashMap<K, V> {
+    private static final int INITIAL_CAPACITY = 16;
+    private static final double LOAD_FACTOR = 0.75;
+
+    private List<List<MyEntry<K, V>>> buckets;
     private int size;
 
-    public MyArrayList() {
-        this.data = new Object[DEFAULT_CAPACITY];
+    public MyHashMap() {
+        this.buckets = new ArrayList<>(INITIAL_CAPACITY);
+        for (int i = 0; i < INITIAL_CAPACITY; i++) {
+            buckets.add(new ArrayList<>());
+        }
         this.size = 0;
     }
 
-    public void add(E value) {
-        if (size == data.length) {
-            resize();
-        }
-        data[size++] = value;
+    private int getBucketIndex(K key) {
+        return key.hashCode() % buckets.size();
     }
 
-    private void resize() {
-        int newCapacity = data.length * 2;
-        data = Arrays.copyOf(data, newCapacity);
+    public void put(K key, V value) {
+        int index = getBucketIndex(key);
+        List<MyEntry<K, V>> bucket = buckets.get(index);
+
+        for (MyEntry<K, V> entry : bucket) {
+            if (entry.getKey().equals(key)) {
+                entry.setValue(value);
+                return;
+            }
+        }
+
+        bucket.add(new MyEntry<>(key, value));
+        size++;
+
+        // Check if we need to resize the buckets
+        if ((double) size / buckets.size() >= LOAD_FACTOR) {
+            resizeBuckets();
+        }
     }
 
-    public void remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
+    public V get(K key) {
+        int index = getBucketIndex(key);
+        List<MyEntry<K, V>> bucket = buckets.get(index);
+
+        for (MyEntry<K, V> entry : bucket) {
+            if (entry.getKey().equals(key)) {
+                return entry.getValue();
+            }
         }
-        System.arraycopy(data, index + 1, data, index, size - index - 1);
-        data[--size] = null;
+
+        return null;
+    }
+
+    public void remove(K key) {
+        int index = getBucketIndex(key);
+        List<MyEntry<K, V>> bucket = buckets.get(index);
+
+        for (MyEntry<K, V> entry : bucket) {
+            if (entry.getKey().equals(key)) {
+                bucket.remove(entry);
+                size--;
+                return;
+            }
+        }
     }
 
     public void clear() {
-        data = new Object[DEFAULT_CAPACITY];
+        buckets.clear();
+        for (int i = 0; i < INITIAL_CAPACITY; i++) {
+            buckets.add(new ArrayList<>());
+        }
         size = 0;
     }
 
@@ -39,10 +100,21 @@ public class MyArrayList<E> {
         return size;
     }
 
-    public E get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
+    private void resizeBuckets() {
+        int newCapacity = buckets.size() * 2;
+        List<List<MyEntry<K, V>>> newBuckets = new ArrayList<>(newCapacity);
+
+        for (int i = 0; i < newCapacity; i++) {
+            newBuckets.add(new ArrayList<>());
         }
-        return (E) data[index];
+
+        for (List<MyEntry<K, V>> bucket : buckets) {
+            for (MyEntry<K, V> entry : bucket) {
+                int newIndex = entry.getKey().hashCode() % newCapacity;
+                newBuckets.get(newIndex).add(entry);
+            }
+        }
+
+        buckets = newBuckets;
     }
 }

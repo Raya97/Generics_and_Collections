@@ -1,129 +1,124 @@
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.HashMap;
+import java.util.Queue;
+import java.util.Stack;
+
 public class Main {
-
     public static void main(String[] args) {
-        // Демонстрація роботи з MyArrayList
         demoMyArrayList();
-
-        // Демонстрація роботи з MyLinkedList
         demoMyLinkedList();
-
-        // Демонстрація роботи з MyQueue
-        demoMyQueue();
-
-        // Демонстрація роботи з MyStack
-        demoMyStack();
-
-        // Демонстрація роботи з MyHashMap
         demoMyHashMap();
+        demoMyQueue();
+        demoMyStack();
     }
 
     private static void demoMyArrayList() {
-        System.out.println("===== MyArrayList Demo =====");
-
+        System.out.println("MyArrayList Demo =====");
         MyArrayList<Integer> myArrayList = new MyArrayList<>();
 
-        // Заповнення колекції 1 млн елементів
-        for (int i = 1; i <= 1000000; i++) {
+        // Додавання 1 млн елементів в MyArrayList
+        for (int i = 1; i <= 1_000_000; i++) {
             myArrayList.add(i);
         }
 
-        System.out.println("Size: " + myArrayList.size());
-        System.out.println("Element at index 500000: " + myArrayList.get(500000));
-        myArrayList.remove(500000);
-        System.out.println("Size after removing element: " + myArrayList.size());
+        // Виведення кількості елементів MyArrayList
+        System.out.println("Size of MyArrayList: " + myArrayList.size());
 
+        // Видалення елемента з MyArrayList за індексом
+        myArrayList.remove(2);
+        System.out.println("MyArrayList after removing element at index 2");
+
+        // Очищення MyArrayList
         myArrayList.clear();
-        System.out.println("Size after clearing: " + myArrayList.size());
-
-        System.out.println();
+        System.out.println("MyArrayList after clearing");
     }
 
     private static void demoMyLinkedList() {
-        System.out.println("===== MyLinkedList Demo =====");
+        System.out.println("\nMyLinkedList Demo =====");
+        MyLinkedList<String> myLinkedList = new MyLinkedList<>();
 
-        MyLinkedList<Integer> myLinkedList = new MyLinkedList<>();
-
-        // Заповнення колекції 1 млн елементів
-        for (int i = 1; i <= 1000000; i++) {
-            myLinkedList.add(i);
+        // Додавання 1 млн елементів в MyLinkedList
+        for (int i = 1; i <= 1_000_000; i++) {
+            myLinkedList.add("Element " + i);
         }
 
-        System.out.println("Size: " + myLinkedList.size());
-        System.out.println("Element at index 500000: " + myLinkedList.get(500000));
-        myLinkedList.remove(500000);
-        System.out.println("Size after removing element: " + myLinkedList.size());
+        // Виведення кількості елементів MyLinkedList
+        System.out.println("Size of MyLinkedList: " + myLinkedList.size());
 
+        // Видалення елемента з MyLinkedList за індексом
+        myLinkedList.remove(1);
+        System.out.println("MyLinkedList after removing element at index 1");
+
+        // Очищення MyLinkedList
         myLinkedList.clear();
-        System.out.println("Size after clearing: " + myLinkedList.size());
-
-        System.out.println();
-    }
-
-    private static void demoMyQueue() {
-        System.out.println("===== MyQueue Demo =====");
-
-        MyQueue<Integer> myQueue = new MyQueue<>();
-
-        // Заповнення черги 1 млн елементів
-        for (int i = 1; i <= 1000000; i++) {
-            myQueue.add(i);
-        }
-
-        System.out.println("Size: " + myQueue.size());
-        System.out.println("Peek: " + myQueue.peek());
-
-        myQueue.poll();
-        System.out.println("Size after polling: " + myQueue.size());
-        System.out.println("Peek after polling: " + myQueue.peek());
-
-        myQueue.clear();
-        System.out.println("Size after clearing: " + myQueue.size());
-
-        System.out.println();
-    }
-
-    private static void demoMyStack() {
-        System.out.println("===== MyStack Demo =====");
-
-        MyStack<Integer> myStack = new MyStack<>();
-
-        // Заповнення стеку 1 млн елементів
-        for (int i = 1; i <= 1000000; i++) {
-            myStack.push(i);
-        }
-
-        System.out.println("Size: " + myStack.size());
-        System.out.println("Peek: " + myStack.peek());
-
-        myStack.pop();
-        System.out.println("Size after popping: " + myStack.size());
-        System.out.println("Peek after popping: " + myStack.peek());
-
-        myStack.clear();
-        System.out.println("Size after clearing: " + myStack.size());
-
-        System.out.println();
+        System.out.println("MyLinkedList after clearing");
     }
 
     private static void demoMyHashMap() {
-        System.out.println("===== MyHashMap Demo =====");
-
+        System.out.println("\nMyHashMap Demo =====");
         MyHashMap<String, Integer> myHashMap = new MyHashMap<>();
 
-        // Заповнення хешмапи 1 млн елементів
-        for (int i = 1; i <= 1000000; i++) {
-            myHashMap.put("Key_" + i, i);
+        // Додавання 1 млн пар ключ-значення в MyHashMap
+        for (int i = 1; i <= 1_000_000; i++) {
+            myHashMap.put("Key " + i, i);
         }
 
-        System.out.println("Size: " + myHashMap.size());
-        System.out.println("Value for key 'Key_500000': " + myHashMap.get("Key_500000"));
+        // Виведення кількості елементів MyHashMap
+        System.out.println("Size of MyHashMap: " + myHashMap.size());
 
-        myHashMap.remove("Key_500000");
-        System.out.println("Size after removing key: " + myHashMap.size());
+        // Видалення пари ключ-значення з MyHashMap
+        myHashMap.remove("Key 500");
+        System.out.println("MyHashMap after removing key 'Key 500'");
 
+        // Очищення MyHashMap
         myHashMap.clear();
-        System.out.println("Size after clearing: " + myHashMap.size());
+        System.out.println("MyHashMap after clearing");
+    }
 
-        System.out.println();
+    private static void demoMyQueue() {
+        System.out.println("\nMyQueue Demo =====");
+        MyQueue<String> myQueue = new MyQueue<>();
+
+        // Додавання 1 млн елементів в MyQueue
+        for (int i = 1; i <= 1_000_000; i++) {
+            myQueue.add("Element " + i);
+        }
+
+        // Виведення кількості елементів MyQueue
+        System.out.println("Size of MyQueue: " + myQueue.size());
+
+        // Отримання першого елемента з MyQueue
+        System.out.println("Peek: " + myQueue.peek());
+
+        // Видалення першого елемента з MyQueue
+        System.out.println("Poll: " + myQueue.poll());
+        System.out.println("MyQueue after poll");
+
+        // Розмір MyQueue
+        System.out.println("Size of MyQueue: " + myQueue.size());
+    }
+
+    private static void demoMyStack() {
+        System.out.println("\nMyStack Demo =====");
+        MyStack<String> myStack = new MyStack<>();
+
+        // Додавання 1 млн елементів в MyStack
+        for (int i = 1; i <= 1_000_000; i++) {
+            myStack.push("Element " + i);
+        }
+
+        // Виведення кількості елементів MyStack
+        System.out.println("Size of MyStack: " + myStack.size());
+
+        // Отримання верхнього елемента MyStack
+        System.out.println("Peek: " + myStack.peek());
+
+        // Видалення верхнього елемента MyStack
+        System.out.println("Pop: " + myStack.pop());
+        System.out.println("MyStack after pop");
+
+        // Розмір MyStack
+        System.out.println("Size of MyStack: " + myStack.size());
     }
 }
